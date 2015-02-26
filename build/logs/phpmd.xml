@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<pmd version="1.5.0" timestamp="2015-02-26T17:05:43+00:00">
+  <file name="/var/jenkins_home/workspace/Projet magento/app/code/local/Itelios/Store/Model/Customer.php">
+    <violation beginline="8" endline="8" rule="ExitExpression" ruleset="Design Rules" externalInfoUrl="http://phpmd.org/rules/design.html#exitexpression" priority="1">
+      The method _beforeSave() contains an exit expression.
+    </violation>
+  </file>
+  <file name="/var/jenkins_home/workspace/Projet magento/app/code/local/Itelios/Store/Model/Observer.php">
+    <violation beginline="13" endline="13" rule="ExitExpression" ruleset="Design Rules" externalInfoUrl="http://phpmd.org/rules/design.html#exitexpression" priority="1">
+      The method saveCmsPageObserve() contains an exit expression.
+    </violation>
+  </file>
+  <file name="/var/jenkins_home/workspace/Projet magento/app/code/local/Itelios/Store/controllers/IndexController.php">
+    <violation beginline="13" endline="13" rule="ExitExpression" ruleset="Design Rules" externalInfoUrl="http://phpmd.org/rules/design.html#exitexpression" priority="1">
+      The method testhelperAction() contains an exit expression.
+    </violation>
+  </file>
+</pmd>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TestJenkins" default="ci" basedir="./">
+    <property name="source" value="app" />
+    <target name="ci"
+        description="Tâche principale d'intégration continue"
+        depends="clean,qa"
+    />
+    <target name="clean" description="Vide les répertoires d'artefacts">
+	<delete dir="${project.basedir}/build/logs" />
+	<mkdir dir="${project.basedir}/build/logs" />
+    </target>
+
+    <target name="qa" description="Lance les outils d'analyse" depends="phpmd,phpcs">
+	
+    </target>
+
+   <target name="phpmd" description="Php mess detector">
+  	<echo msg="Running phpmd" />
+   	<exec executable="phpmd">
+        	<arg value="${project.basedir}/app/" />
+        	<arg value="xml" />
+        	<arg value="${project.basedir}/build/rulesets/magento-ruleset-phpmd.xml" />
+        	<arg value="--reportfile" />
+        	<arg value="${project.basedir}/build/logs/phpmd.xml" />
+    	</exec>
+   </target>
+
+   <target name="phpcs" description="Php mess detector">
+   	<echo msg="Running phpcs" />
+	<exec executable="phpcs">
+    		<arg value="--report=checkstyle" /> 
+      		<arg value="--report-file=${project.basedir}/build/logs/phpcs.xml" />
+      		<arg value="--standard=${project.basedir}/build/rulesets/magento-ruleset-phpcs.xml" />
+      		<arg value="--extensions=php" />
+      		<arg value="${project.basedir}" />
+  	</exec>
+   </target>
+
+</project>
