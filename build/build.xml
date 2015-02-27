@@ -7,17 +7,28 @@
     />
     <target name="clean" description="Vide les répertoires d'artefacts">
 	<delete dir="${project.basedir}/build/logs" />
+	<delete dir="${project.basedir}/build/docs" />
+	<delete dir="${project.basedir}/build/codebrowser" />
+
 	<mkdir dir="${project.basedir}/build/logs" />
+	<mkdir dir="${project.basedir}/build/docs" />	
+	<mkdir dir="${project.basedir}/build/codebrowser" />
     </target>
 
-    <target name="qa" description="Lance les outils d'analyse" depends="phpmd,phpcs">
-	
+    <target name="qa" description="Lance les outils d'analyse">
+	<phingcall target="phpmd" /> 
+	<phingcall target="phpcs" />
+	<phingcall target="phpcpd" />
+	<phingcall target="pdepend" />
+	<phingcall target="phpdoc" />
+	<phingcall target="phploc" />
+	<phingcall target="phpcb" />
     </target>
 
    <target name="phpmd" description="Php mess detector">
   	<echo msg="Running phpmd" />
    	<exec executable="phpmd">
-        	<arg value="${project.basedir}/app/" />
+        	<arg value="${project.basedir}/${source}/" />
         	<arg value="xml" />
         	<arg value="${project.basedir}/build/rulesets/magento-ruleset-phpmd.xml" />
         	<arg value="--reportfile" />
@@ -32,8 +43,44 @@
       		<arg value="--report-file=${project.basedir}/build/logs/phpcs.xml" />
       		<arg value="--standard=${project.basedir}/build/rulesets/magento-ruleset-phpcs.xml" />
       		<arg value="--extensions=php" />
-      		<arg value="${project.basedir}" />
+      		<arg value="${project.basedir}/${source}/" />
   	</exec>
+   </target> 
+   
+   <target name="phpcpd" description="Php Cpd detection des copier/coller">
+   	<echo msg="Running phpcpd" />
+	<exec executable="phpcpd">
+		<arg value="--log-pmd"  />
+		<arg value="${project.basedir}/build/logs/pmd-cpd.xml" />	
+		<arg path="${project.basedir}/${source}/" />
+		<arg value="--min-lines=5" />
+		<arg value="--min-tokens=3" />
+        </exec>
    </target>
+	
+   <target name="pdepend" description="dependencies analysis">
+    <echo msg="PHPDepend Analysis..." />
+    <exec executable="pdepend">
+	<arg value="--summary-xml=${project.basedir}/build/logs/pdepend-summary.xml"  />
+	<arg value="--jdepend-chart=${project.basedir}/build/logs/pdepend-chart.svg"  />
+	<arg value="--overview-pyramid=${project.basedir}/build/logs/pdepend-pyramid.svg" />
+	<arg path="${project.basedir}/${source}/" />
+    </exec> 
+  </target>
 
+  <target name="phpdoc" description="Generate API documentation using phpDocumentor 2">
+  	<echo msg="Generating documentation..." />
+    	<exec command="phpdoc -d ${project.basedir}/${source}/ -t ${project.basedir}/build/docs/ -t ${project.basedir}/build/docs/"  />
+  </target>
+
+  <target name="phploc" description="">
+	<echo msg="Generating Statistics about the code..." />
+   	<exec dir="${project.basedir}" command="phploc --log-csv '${project.basedir}/build/logs/phploc.csv' '${project.basedir}/app/' " escape="false" />
+  </target>	
+
+  <target name="phpcb" description="">
+	<echo msg="Generating CodeBrowser..." />
+  	<exec  command="phpcb --log '${project.basedir}/build/logs/cb' --source '${project.basedir}/${source}/' --output '${project.basedir}/build/codebrowser'" />
+  </target>
+	
 </project>
